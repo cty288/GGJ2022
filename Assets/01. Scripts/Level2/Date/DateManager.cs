@@ -20,7 +20,7 @@ public class DateManager : MonoMikroSingleton<DateManager>
     #region Functional Field
     private void Awake()
     {
-        SpawnHint();
+        ResetHints();
     }
 
     private void Update()
@@ -28,7 +28,7 @@ public class DateManager : MonoMikroSingleton<DateManager>
         CheckAnswer();
     }
 
-    #endregion
+    #endregion 
 
     #region
 
@@ -47,18 +47,67 @@ public class DateManager : MonoMikroSingleton<DateManager>
         hint_S = incorrectHintList[2];
         hint_D = incorrectHintList[3];
     }
+    
+    public void CheckAnswer()
+    {
+        if (Input.GetKeyDown(KeyCode.W))
+        {
+            if (correctHint == hint_W) CorrectChoice();
+            else WrongChoice();
+        }
+        else if (Input.GetKeyDown(KeyCode.A))
+        {
+            if (correctHint == hint_A) CorrectChoice();
+            else WrongChoice();
+        }
+        else if (Input.GetKeyDown(KeyCode.S))
+        {
+            if (correctHint == hint_S) CorrectChoice();
+            else WrongChoice();
+        }
+        else if (Input.GetKeyDown(KeyCode.D))
+        {
+            if (correctHint == hint_D) CorrectChoice();
+            else WrongChoice();
+        }
+    }
+ 
+    public void CorrectChoice()
+    {
+        Debug.Log("Correct");
+        DateManager.Singleton.ResetHints(); //Reset Hints
+        if (!MolesManager.Singleton.spawningMoles) MolesManager.Singleton.ResetMoles(); //Reset Moles
 
-    public void SpawnHint()
+    } 
+
+    public void WrongChoice()
+    {
+        Debug.Log("You Loser");
+        DateManager.Singleton.ResetHints();
+        if (!MolesManager.Singleton.spawningMoles) MolesManager.Singleton.ResetMoles();
+    }
+
+    public void ResetHints()
+    {
+        ClearPrevHints();
+        SpawnNewHints();
+    }
+
+    public void ClearPrevHints()
     {
         if (correctHint != null) Destroy(correctHint);
         if (incorrectHintList.Count != 0)
         {
             foreach (GameObject element in incorrectHintList)
             {
-                incorrectHintList.Remove(element);
+                Destroy(element);
             }
+            incorrectHintList.Clear();
         }
+    }
 
+    public void SpawnNewHints()
+    {
         for (int i = 0; i < 4; i++)
         {
             GameObject hint = Instantiate(hintPref, hintSpawnPosList[i].transform.position, Quaternion.identity);
@@ -71,46 +120,6 @@ public class DateManager : MonoMikroSingleton<DateManager>
         incorrectHintList.Remove(correctHint);
         spriteRenderer = correctHint.GetComponent<SpriteRenderer>();
         spriteRenderer.color = Color.yellow;
-    }
-
-    public void CheckAnswer()
-    {
-        if (Input.GetKeyDown(KeyCode.W))
-        {
-            if (correctHint == hint_W)
-            {
-                Debug.Log("Correct");
-                DateManager.Singleton.SpawnHint();
-            }
-            else Debug.Log("Incorrect");
-        }
-        else if (Input.GetKeyDown(KeyCode.A))
-        {
-            if (correctHint == hint_A)
-            {
-                Debug.Log("Correct");
-                DateManager.Singleton.SpawnHint();
-            }
-            else Debug.Log("Incorrect");
-        }
-        else if (Input.GetKeyDown(KeyCode.S))
-        {
-            if (correctHint == hint_S)
-            {
-                Debug.Log("Correct");
-                DateManager.Singleton.SpawnHint();
-            }
-            else Debug.Log("Incorrect");
-        }
-        else if (Input.GetKeyDown(KeyCode.D))
-        {
-            if (correctHint == hint_D)
-            {
-                Debug.Log("Correct");
-                DateManager.Singleton.SpawnHint();
-            }
-            else Debug.Log("Incorrect");
-        }
     }
 
     #endregion

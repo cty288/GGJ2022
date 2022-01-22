@@ -6,74 +6,95 @@ using MikroFramework.BindableProperty;
 
 public class MolesManager : MonoMikroSingleton<MolesManager>
 {
-    public static int count;
-    public GameObject holes;
-    [SerializeField] private List<GameObject> holePos;
-    [SerializeField] private int nextIndex;
-    [SerializeField] private GameObject molePref;
+    public bool spawningMoles = false;
 
+    public static int count;
+    public List<GameObject> moleSpawnPointsList;
+    public List<GameObject> moleTempList;
+    public List<GameObject> spawnedMoles;
+
+    private int nextIndex;
+    [SerializeField] private GameObject molePref;
+    [SerializeField] private GameObject duckPref;
+    
     #region Functional Field
 
     private void Awake()
     {
-        for(int i = 0; i < 9; i++)
-        {
-            string index = "" + i;
-            holePos[i] = holes.transform.Find(index).gameObject;
-        }
+        
     }
 
     private void Start()
     {
-        StartCoroutine(SpawnMole());
+        ResetMoles();
+        Timer.Singleton.AddDelayTask(5, () => {
+            DuckSpawn(2);
+        });
     }
 
     private void Update()
     {
-        if (MolesManager.count == 3)
-        {
-            Debug.Log("OneSetDone");
-            StartCoroutine(MolesManager.Singleton.SpawnMole());
-            MolesManager.count = 0;
-        }
+        
     }
 
     #endregion
 
-    #region Coroutine
-
-    public IEnumerator SpawnMole()
+    #region Moles
+    
+    public void ResetMoles()
     {
+        StartCoroutine(CoroutineResetMoles());
+    }
+
+    public IEnumerator CoroutineResetMoles()
+    {
+        spawningMoles = true;
+        if (spawnedMoles.Count != 0) foreach (GameObject element in spawnedMoles) Destroy(element);
+        spawnedMoles.Clear();
+
+        moleTempList.Clear();
+
+        for (int i = 0; i < 9; i++) 
+        {
+            GameObject tempMole = moleSpawnPointsList[i];
+            moleTempList.Add(tempMole);
+        }
+
         yield return new WaitForSeconds(2f);
         nextIndex = Random.Range(0, 8);
-        Instantiate(molePref, holePos[nextIndex].transform.position, Quaternion.identity);
-        holePos.RemoveAt(nextIndex);
+        spawnedMoles.Add(Instantiate(molePref, moleTempList[nextIndex].transform.position, Quaternion.identity));
+        moleTempList.RemoveAt(nextIndex);
 
         yield return new WaitForSeconds(0.75f);
         nextIndex = Random.Range(0, 7);
-        Instantiate(molePref, holePos[nextIndex].transform.position, Quaternion.identity);
-        holePos.RemoveAt(nextIndex);
+        spawnedMoles.Add(Instantiate(molePref, moleTempList[nextIndex].transform.position, Quaternion.identity));
+        moleTempList.RemoveAt(nextIndex);
 
         yield return new WaitForSeconds(0.75f);
         nextIndex = Random.Range(0, 6);
-        Instantiate(molePref, holePos[nextIndex].transform.position, Quaternion.identity);
-        holePos.RemoveAt(nextIndex);
+        spawnedMoles.Add(Instantiate(molePref, moleTempList[nextIndex].transform.position, Quaternion.identity));
+        moleTempList.RemoveAt(nextIndex);
 
-        holePos.Clear();
-
-        foreach(GameObject element in holePos)
-        {
-            holePos.Remove(element);
-        }
-
-        for (int i = 0; i < 9; i++)
-        {
-            string index = "" + i;
-            holePos.Add(holes.transform.Find(index).gameObject);
-        }
-
-        yield return new WaitForSeconds(2f);
+        spawningMoles = false;
     }
 
     #endregion
+
+    #region Ducks
+
+    public void DuckSpawn(float spawnRate)
+    {
+        while (!spawningMoles && moleTempList.Count != 0) {
+            Instantiate(duckPref, moleTempList[Random.Range(0, moleTempList.Count)].transform.position, Quaternion.identity);
+            Timer.Singleton.AddDelayTask(spawnRate, () =>
+            {
+                Instantiate(duckPref, moleTempList[Random.Range(0, moleTempList.Count)].transform.position, Quaternion.identity);
+            });
+        }
+    }
+
+
+    #endregion
 }
+
+

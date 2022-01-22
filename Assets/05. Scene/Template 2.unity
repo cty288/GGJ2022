@@ -586,7 +586,7 @@ Camera:
   far clip plane: 1000
   field of view: 60
   orthographic: 1
-  orthographic size: 9.776675
+  orthographic size: 9.359823
   m_Depth: -1
   m_CullingMask:
     serializedVersion: 2
@@ -1215,8 +1215,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 86e80d9746e1a364aad8b6cbabdc3f72, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  holes: {fileID: 1541331571}
-  holePos:
+  spawningMoles: 0
+  moleSpawnPointsList:
   - {fileID: 280174852}
   - {fileID: 596553495}
   - {fileID: 843356848}
@@ -1226,8 +1226,10 @@ MonoBehaviour:
   - {fileID: 1966931647}
   - {fileID: 1518429811}
   - {fileID: 826407703}
-  nextIndex: 0
+  moleTempList: []
+  spawnedMoles: []
   molePref: {fileID: 5535723930796580242, guid: 41398ca43ef2b454eaf62516c7ce8fdb, type: 3}
+  duckPref: {fileID: 2148897629906006286, guid: 73f6d67411b992a4c8beb6a2800f2679, type: 3}
 --- !u!4 &1131825377
 Transform:
   m_ObjectHideFlags: 0
@@ -1887,7 +1889,7 @@ GameObject:
   m_Component:
   - component: {fileID: 1541331572}
   m_Layer: 0
-  m_Name: Holes
+  m_Name: MolesSpawnPoints
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -2095,7 +2097,7 @@ GameObject:
   m_Component:
   - component: {fileID: 1777531550}
   m_Layer: 0
-  m_Name: HintSpawnPoint
+  m_Name: HintSpawnPoints
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -2674,7 +2676,7 @@ Camera:
   far clip plane: 1000
   field of view: 60
   orthographic: 1
-  orthographic size: 9.776675
+  orthographic size: 9.359823
   m_Depth: -1
   m_CullingMask:
     serializedVersion: 2
