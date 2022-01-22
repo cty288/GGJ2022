@@ -63,7 +63,13 @@ namespace MikroFramework.Singletons {
             get
             {
                 if (instance == null || FindObjectOfType<T>()==null) {
-                    instance = SingletonCreator.CreateMonoSingleton<T>(false);
+                    if (FindObjectOfType<T>() == null) {
+                        instance = SingletonCreator.CreateMonoSingleton<T>(false);
+                    }
+                    else {
+                        instance = FindObjectOfType<T>();
+                    }
+                    
                 }
                 return instance;
             }
