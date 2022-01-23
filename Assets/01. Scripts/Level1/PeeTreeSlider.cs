@@ -44,17 +44,20 @@ public class PeeTreeSlider : MonoBehaviour {
 
             if (Input.GetMouseButtonUp(0)) {
                
-                if (peeTreeSlider.value >= peeTreeChargePercentage &&
-                    peeTreeSlider.value <= peeTreeChargePercentage + sliderWidth) {
+                if (peeTreeSlider.value >= peeTreeChargePercentage  &&
+                    peeTreeSlider.value <= peeTreeChargePercentage + sliderWidth ) {
                     TypeEventSystem.SendGlobalEvent<OnTreePassed>(new OnTreePassed() {
                         IsLastTree = (Level12Manager.Singleton.CurrentTree == Level12Manager.Singleton.MaxTreeCount),
                         PeeTree = Level12Manager.Singleton.CurrentPeeTree
                     });
-                    //sliderMove = false;
+                    sliderMove = false;
                 }
                 else {
                     peeTreeSlider.value = 0;
-                    sliderMoveForward = true;
+                    Timer.Singleton.AddDelayTask(0.5f, () => {
+                        sliderMoveForward = true;
+                    });
+                    
                     //TypeEventSystem.SendGlobalEvent<OnPlayerFail>();
                     Debug.Log("Fail");
                 }

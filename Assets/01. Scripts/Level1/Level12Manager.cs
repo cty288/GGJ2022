@@ -1,6 +1,7 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using MikroFramework.BindableProperty;
 using MikroFramework.Event;
 using MikroFramework.Singletons;
 using UnityEngine;
@@ -35,15 +36,23 @@ public class Level12Manager : MonoMikroSingleton<Level12Manager> {
     [SerializeField]
     private int currentTree = 0;
     public int CurrentTree => currentTree;
+    public BindableProperty<int> RemainingFightNum = new BindableProperty<int>(10);
 
     public PeeTree CurrentPeeTree;
 
     private void Start() {
         TypeEventSystem.RegisterGlobalEvent<OnTreePassed>(OnTreeSwitched).UnRegisterWhenGameObjectDestroyed(gameObject);
         SwitchTree(Random.Range(0, PeeTreeConfig.Count-1));
+        Timer.Singleton.AddDelayTask(5, () => {
+            TypeEventSystem.SendGlobalEvent<OnLeftPrepareToStart>();
+            Timer.Singleton.AddDelayTask(4, () => {
+                TypeEventSystem.SendGlobalEvent<OnLeftStart>();
+            });
+        });
     }
 
     private void OnTreeSwitched(OnTreePassed e) {
+        RemainingFightNum.Value++;
         Timer.Singleton.AddDelayTask(2f, () => {
             Debug.Log("Switch tree");
             if (currentTree < maxTreeCount)
@@ -59,6 +68,8 @@ public class Level12Manager : MonoMikroSingleton<Level12Manager> {
 
                 }
 
+            }
+            else {
             }
         });
         

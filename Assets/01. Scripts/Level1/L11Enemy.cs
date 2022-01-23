@@ -3,6 +3,7 @@ using System.Collections;
 using System.Collections.Generic;
 using DG.Tweening;
 using MikroFramework.Event;
+using MikroFramework.Singletons;
 using MikroFramework.Utilities;
 using UnityEngine;
 using Random = UnityEngine.Random;
@@ -15,7 +16,8 @@ public enum EnemyState
    Alive,
    Die
 }
-public class L11Enemy : MonoBehaviour {
+public class L11Enemy : MonoMikroSingleton<Level12Manager>
+{
     public bool IsDie;
     [SerializeField] private float speed;
     private Vector2 startLocation;
@@ -88,11 +90,13 @@ public class L11Enemy : MonoBehaviour {
 
     }
 
+    [SerializeField] private AudioClip hitClip;
     private void OnPlayerFightHit(OnPlayerFightHit e) {
         if (e.Target == gameObject) {
             Debug.Log("Hit");
             spriteRenderer.color = Color.red;
             hurtTimer = 0.3f;
+            AudioManager.Singleton.PlayAudioShot(hitClip, 0.7f);
             isDie = true;
         }
     }
@@ -286,9 +290,9 @@ public class L11Enemy : MonoBehaviour {
         hurtTimer -= Time.deltaTime;
 
         if (hurtTimer <= 0 && isDie) {
-            spriteRenderer.color = Color.white;
+           // spriteRenderer.color = Color.white;
             DOTween.To(() => spriteRenderer.color, value => spriteRenderer.color = value,
-                    new Color(spriteRenderer.color.r, spriteRenderer.color.g, spriteRenderer.color.b, 0), 1f)
+                    new Color(1,1 , 1, 0), 1f)
                 .OnComplete(() => Destroy(this.gameObject));
         }
 

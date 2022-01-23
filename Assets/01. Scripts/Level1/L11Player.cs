@@ -34,6 +34,8 @@ public class L11Player : MonoMikroSingleton<L11Player> {
 
     private Material mat;
 
+    private bool canControl = false;
+
     public L11PlayerState PlayerState = L11PlayerState.Alive;
     private void Awake() {
         rigidbody = GetComponent<Rigidbody2D>();
@@ -44,89 +46,113 @@ public class L11Player : MonoMikroSingleton<L11Player> {
     private void Start() {
         TypeEventSystem.RegisterGlobalEvent<OnPlayerHitByEnemy>(OnPlayerHitByEnemy)
             .UnRegisterWhenGameObjectDestroyed(gameObject);
+        TypeEventSystem.RegisterGlobalEvent<OnLeftStart>(OnGameStart)
+            .UnRegisterWhenGameObjectDestroyed(gameObject);
     }
 
+    private void OnGameStart(OnLeftStart obj) {
+        canControl = true;
+    }
+
+    [SerializeField] private AudioClip hurtAudio;
     private void OnPlayerHitByEnemy(OnPlayerHitByEnemy e) {
         SpriteRenderer spriteRenderer = GetComponentInChildren<SpriteRenderer>();
         spriteRenderer.color = Color.red;
-        
+        AudioManager.Singleton.PlayAudioShot(hurtAudio,1f);
         Timer.Singleton.AddDelayTask(0.3f, () => {
             spriteRenderer.color = Color.white;
         });
     }
 
     private void Update() {
-        if (Input.GetKeyDown(KeyCode.Space) && !isFighting)
-        {
-            isFighting = true;
-            animator.SetTrigger("Fight");
+        if (canControl) {
+            if (Input.GetKeyDown(KeyCode.Space) && !isFighting && Level12Manager.Singleton.RemainingFightNum > 0)
+            {
+                Level12Manager.Singleton.RemainingFightNum.Value--;
+                isFighting = true;
+                animator.SetTrigger("Fight");
 
-            if (fightTrigger2D.Triggered) {
-                if (fightTrigger2D.Colliders.Count > 0) {
-                    Timer.Singleton.AddDelayTask(0.2f, () => {
-                        if (fightTrigger2D.Colliders.Count > 0 && fightTrigger2D.Colliders[0]) {
-                            TypeEventSystem.SendGlobalEvent<OnPlayerFightHit>(new OnPlayerFightHit()
+                if (fightTrigger2D.Triggered)
+                {
+                    if (fightTrigger2D.Colliders.Count > 0)
+                    {
+                        Timer.Singleton.AddDelayTask(0.2f, () => {
+                            if (fightTrigger2D.Colliders.Count > 0 && fightTrigger2D.Colliders[0])
                             {
-                                Target = fightTrigger2D.Colliders[0].gameObject
-                            });
-                        }
-                       
+                                TypeEventSystem.SendGlobalEvent<OnPlayerFightHit>(new OnPlayerFightHit()
+                                {
+                                    Target = fightTrigger2D.Colliders[0].gameObject
+                                });
+                            }
 
-                    });
-                    
+
+                        });
+
+                    }
                 }
-            }
-            
 
-            Timer.Singleton.AddDelayTask(0.67f, () => {
-                isFighting = false;
-            });
+
+                Timer.Singleton.AddDelayTask(0.67f, () => {
+                    isFighting = false;
+                });
+            }
         }
+        
     }
 
     private void FixedUpdate() {
-        float horizontal = 0;
-        float vertical = 0;
-        
-        if (Input.GetKey(KeyCode.A)) {
-            horizontal = -1;
+        if (canControl) {
+            float horizontal = 0;
+            float vertical = 0;
+
+            if (Input.GetKey(KeyCode.A))
+            {
+                horizontal = -1;
+            }
+
+            if (Input.GetKey(KeyCode.D))
+            {
+                horizontal = 1;
+            }
+
+            if (Input.GetKey(KeyCode.S))
+            {
+                vertical = -1;
+            }
+
+            if (Input.GetKey(KeyCode.W))
+            {
+                vertical = 1;
+            }
+
+
+
+            if (horizontal != 0 || vertical != 0)
+            {
+                mat.SetFloat("_DoodleFrameTime", doodleMoveFrametime);
+            }
+            else if (horizontal == 0 || vertical == 0)
+            {
+                mat.SetFloat("_DoodleFrameTime", doodleIdleFrrametime);
+            }
+
+            Vector2 direction = new Vector2(horizontal, vertical).normalized;
+
+            targetVelocity = direction * moveSpeed;
+
+            rigidbody.velocity = Vector2.Lerp(rigidbody.velocity, targetVelocity, speedLerpSpeed);
+
+            if (rigidbody.velocity.x > 0)
+            {
+                transform.localScale = new Vector3(1, 1, 1);
+            }
+
+            if (rigidbody.velocity.x < 0)
+            {
+                transform.localScale = new Vector3(-1, 1, 1);
+            }
         }
 
-        if (Input.GetKey(KeyCode.D))
-        {
-            horizontal = 1;
-        }
-
-        if (Input.GetKey(KeyCode.S)) {
-            vertical = -1;
-        }
-
-        if (Input.GetKey(KeyCode.W))
-        {
-            vertical = 1;
-        }
-
-       
-
-        if (horizontal != 0 || vertical != 0) {
-            mat.SetFloat("_DoodleFrameTime", doodleMoveFrametime);
-        }else if (horizontal == 0 || vertical == 0) {
-            mat.SetFloat("_DoodleFrameTime", doodleIdleFrrametime);
-        }
-
-        Vector2 direction = new Vector2(horizontal, vertical).normalized;
-
-        targetVelocity = direction * moveSpeed;
-
-        rigidbody.velocity = Vector2.Lerp(rigidbody.velocity, targetVelocity, speedLerpSpeed);
-
-        if (rigidbody.velocity.x > 0) {
-            transform.localScale = new Vector3(1, 1, 1);
-        }
-
-        if (rigidbody.velocity.x < 0)
-        {
-            transform.localScale = new Vector3(-1, 1, 1);
-        }
+      
     }
 }
