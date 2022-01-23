@@ -214,7 +214,6 @@ public class WaveAction : MonoBehaviour
         Invoke("DogRoll", waveData.delta);
     }
 
-    [SerializeField] private AudioClip successAudio;
     void CorrectAction()
     {
         if (currentFinish) return;
@@ -222,7 +221,7 @@ public class WaveAction : MonoBehaviour
         Debug.Log("OHHHHHHHH");
         currentFinish = true;
         //有“成功执行动作”的音效就播放吧
-        AudioManager.Singleton.PlayAudioShot(successAudio,1f);
+
     }
 
     void ShowMesBox()

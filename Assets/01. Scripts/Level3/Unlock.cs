@@ -33,18 +33,13 @@ public class Unlock : MonoBehaviour
     bool gameFinish = false;
     bool corretAngle = false;
     int stickLasting = 3;
-    private bool canUse = false;
+
     void Start()
     {
         stickLasting = stickLastingCount;
         targetRotation = Random.Range(rotError - 90f, 90f - rotError);
         Debug.Log(targetRotation);
         TypeEventSystem.RegisterGlobalEvent<CorrectAction>(ResumeStick);
-        TypeEventSystem.RegisterGlobalEvent<OnLeftStart>(OnLeftStart).UnRegisterWhenGameObjectDestroyed(gameObject);
-    }
-
-    private void OnLeftStart(OnLeftStart obj) {
-        canUse = true;
     }
 
     void ResumeStick(CorrectAction action)
@@ -62,39 +57,36 @@ public class Unlock : MonoBehaviour
 
     void Update()
     {
-        if (canUse) {
-            countText.text = stickLasting.ToString();
-            if (tutorialRenderer.color.a == 1)
-            {
-                if (Input.GetKeyDown(KeyCode.Space) || Input.GetKeyDown(KeyCode.Q) || Input.GetKeyDown(KeyCode.E)) tutorialRenderer.DOFade(0, repairEffectFadeTime);
-            }
-            if (!gameFinish)
-            {
-                float transferZ = clipIns.rotation.eulerAngles.z;
-                if (transferZ > 270 - 11.4514) transferZ -= 360;
-                if (stickLasting != 0)
-                {
-                    if (Input.GetKey(KeyCode.Q) && transferZ <= 90)
-                    {
-                        clipIns.Rotate(new Vector3(0, 0, rotSpeed));
-                    }
-                    if (Input.GetKey(KeyCode.E) && transferZ >= -90)
-                    {
-                        clipIns.Rotate(new Vector3(0, 0, -rotSpeed));
-                    }
-                    if (Input.GetKeyDown(KeyCode.Space))
-                    {
-                        float solveE = SolveError();
-                        //在这里播放转动的音效
-                        if (Random.Range(0, 1f) > 0.5f) PlayClip(3); else PlayClip(4);
-                        keyHole.DORotate(new Vector3(0, 0, solveE - 90), moveFullDuration);
-                        Invoke("FinishRotate", moveFullDuration);
-                    }
-                }
-                if (!Input.GetKey(KeyCode.Space)) ResumeLock();
-            }
+        countText.text = stickLasting.ToString();
+        if (tutorialRenderer.color.a == 1)
+        {
+            if (Input.GetKeyDown(KeyCode.Space) || Input.GetKeyDown(KeyCode.Q) || Input.GetKeyDown(KeyCode.E)) tutorialRenderer.DOFade(0, repairEffectFadeTime);
         }
-       
+        if (!gameFinish)
+        {
+            float transferZ = clipIns.rotation.eulerAngles.z;
+            if (transferZ > 270 - 11.4514) transferZ -= 360;
+            if (stickLasting != 0)
+            {
+                if (Input.GetKey(KeyCode.Q) && transferZ <= 90)
+                {
+                    clipIns.Rotate(new Vector3(0, 0, rotSpeed));
+                }
+                if (Input.GetKey(KeyCode.E) && transferZ >= -90)
+                {
+                    clipIns.Rotate(new Vector3(0, 0, -rotSpeed));
+                }
+                if (Input.GetKeyDown(KeyCode.Space))
+                {
+                    float solveE = SolveError();
+                    //在这里播放转动的音效
+                    if (Random.Range(0, 1f) > 0.5f) PlayClip(3); else PlayClip(4);
+                    keyHole.DORotate(new Vector3(0, 0, solveE - 90), moveFullDuration);
+                    Invoke("FinishRotate", moveFullDuration);
+                }
+            }
+            if (!Input.GetKey(KeyCode.Space)) ResumeLock();
+        }
     }
 
     void FinishRotate()
@@ -130,11 +122,7 @@ public class Unlock : MonoBehaviour
         GetComponent<Animation>().Play();
         gameFinish = true;
         Success success = new Success();
-
-        Timer.Singleton.AddDelayTask(3f, () => {
-            TypeEventSystem.SendGlobalEvent(new OnLevelPass());
-        });
-        
+        TypeEventSystem.SendGlobalEvent(success);
     }
 
     void UnlockFail()

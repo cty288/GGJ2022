@@ -49,7 +49,6 @@ public class Level11Manager :  MonoMikroSingleton<Level11Manager> {
             if (!GameObject.FindObjectOfType<L11Enemy>()) {
                 if (!levelPassSend) {
                     levelPassSend = true;
-                    Debug.Log("Level pass");
                     TypeEventSystem.SendGlobalEvent<OnLevelPass>(new OnLevelPass());
                 }
             }
