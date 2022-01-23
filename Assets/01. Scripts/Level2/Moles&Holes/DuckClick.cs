@@ -10,13 +10,22 @@ public class DuckClick : MonoBehaviour
     [SerializeField] private Animator Animator;
     [SerializeField] private AudioClip clickDuck;
 
+    public Texture2D clicked;
+    public Texture2D normal;
+    public CursorMode cursorMode = CursorMode.Auto;
+    public Vector2 hotSpot = Vector2.zero;
+
     private void Awake()
     {
+        Cursor.SetCursor(normal, hotSpot, cursorMode);
         dogHead = GameObject.FindWithTag("DogHead");
         Animator = dogHead.GetComponent<Animator>();
     }
     private void OnMouseDown()
     {
+
+        Cursor.SetCursor(clicked, hotSpot, cursorMode);
+
         AudioManager.Singleton.PlayAudioShot(clickDuck, 1);
         if (!DateManager.Singleton.isShaking)
         {
@@ -33,5 +42,10 @@ public class DuckClick : MonoBehaviour
 
         MolesManager.Singleton.occupiedHoleList.Remove(this.id);
         Animator.SetInteger("State", 1);
+    }
+
+    public void OnMouseUp()
+    {
+        Cursor.SetCursor(normal, hotSpot, cursorMode);
     }
 }
