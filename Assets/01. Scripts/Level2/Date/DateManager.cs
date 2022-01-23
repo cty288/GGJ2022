@@ -17,7 +17,11 @@ public class DateManager : MonoMikroSingleton<DateManager>
     [SerializeField] private List<GameObject> hintSpawnPosList;
     [SerializeField] private List<GameObject> incorrectHintList;
     [SerializeField] private List<GameObject> btnList;
+    public List<GameObject> btnOrginPosLis;
     [SerializeField] private GameObject correctHint;
+    [SerializeField] private GameObject talk;
+
+    private Animator talkAnimator;
      
     
     public GameObject hint_Up;
@@ -25,11 +29,18 @@ public class DateManager : MonoMikroSingleton<DateManager>
     public GameObject hint_Down;
     public GameObject hint_Right;
 
+    public int correctHintIndex;
+    public int matchIndex = -2;
+
 
     #region Functional Field
     private void Awake()
     {
-        ResetHints();
+        talkAnimator = talk.GetComponent<Animator>();
+        Timer.Singleton.AddDelayTask(3f, () =>
+        {
+            ResetHints();
+        });
     }
 
     private void Update()
@@ -37,7 +48,14 @@ public class DateManager : MonoMikroSingleton<DateManager>
         CheckAnswer();
     }
 
-    #endregion 
+    #region Talk
+
+    
+
+    #endregion
+
+
+    #endregion
 
     #region
 
@@ -105,8 +123,23 @@ public class DateManager : MonoMikroSingleton<DateManager>
 
     public void ResetHints()
     {
+
         ClearPrevHints();
         SpawnNewHints();
+
+        if (hintSpawnPosList.Count != 0)
+        {
+            foreach (GameObject element in hintSpawnPosList)
+            {
+                ButtonFadeIn script = element.GetComponent<ButtonFadeIn>();
+                linkedBtn = script.linkedButton;
+                if (linkedBtn != null)
+                {
+                    SpriteRenderer render = linkedBtn.GetComponent<SpriteRenderer>();
+                    render.DOFade(1, 0.9f);
+                }
+            }
+        }
     }
 
     public void ClearPrevHints()
@@ -124,6 +157,7 @@ public class DateManager : MonoMikroSingleton<DateManager>
 
     public void SpawnNewHints()
     {
+
         for (int i = 0; i < hintSpawnPosList.Count; i++)
         {
             GameObject temp = hintSpawnPosList[i];
@@ -177,9 +211,20 @@ public class DateManager : MonoMikroSingleton<DateManager>
 
         }
         LaberKeyCode();
-        correctHint = incorrectHintList[Random.Range(0, 4)];
+        correctHintIndex = Random.Range(0, 4);
+        correctHint = incorrectHintList[correctHintIndex];
         correctHint.name = "CorrectHint";
         incorrectHintList.Remove(correctHint);
+
+        matchIndex = 0;
+        while (btnOrginPosLis[matchIndex] != correctHint.GetComponent<ButtonFadeIn>().linkedButton)
+        {
+            matchIndex++;
+        }
+
+        talkAnimator.SetInteger("State", matchIndex);
+
+        
     }
 
     #endregion
