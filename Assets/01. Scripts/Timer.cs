@@ -8,7 +8,7 @@ using UnityEngine;
 
 public class Timer : MikroSingleton<Timer> {
     private TimeSystem timeSystem;
-
+    
     private Timer() { }
     public override void OnSingletonInit() {
         base.OnSingletonInit();
