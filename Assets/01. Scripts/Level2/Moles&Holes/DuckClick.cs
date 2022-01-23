@@ -23,7 +23,6 @@ public class DuckClick : MonoBehaviour
         DOTween.To(() => render.color, value => render.color = value, new Color(render.color.r, render.color.g, render.color.b, 0),
             .7f).SetEase(Ease.InBounce).OnComplete(() => Destroy(gameObject));
 
-        DateManager.Singleton.DestroyHint();
         MolesManager.Singleton.occupiedHoleList.Remove(this.id);
         Animator.SetInteger("State", 1);
     }

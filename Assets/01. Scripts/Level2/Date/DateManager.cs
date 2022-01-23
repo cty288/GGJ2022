@@ -19,11 +19,19 @@ public class DateManager : MonoMikroSingleton<DateManager>
     [SerializeField] private List<GameObject> btnList;
     public List<GameObject> btnOrginPosLis;
     [SerializeField] private GameObject correctHint;
-    [SerializeField] private GameObject talk;
+    [SerializeField] private GameObject talk_Right;
+    [SerializeField] private GameObject talk_Left;
 
-    private Animator talkAnimator;
-     
-    
+    [SerializeField] private GameObject dogGirl;
+    [SerializeField] private GameObject dogGuy;
+
+    private Animator rightAnimator;
+    private Animator leftAnimator;
+
+    private Animator dogGirlAnimator;
+    private Animator dogGuyAnimator;
+
+
     public GameObject hint_Up;
     public GameObject hint_Left;
     public GameObject hint_Down;
@@ -31,12 +39,16 @@ public class DateManager : MonoMikroSingleton<DateManager>
 
     public int correctHintIndex;
     public int matchIndex = -2;
+    public int leftPlayIndex;
 
 
     #region Functional Field
     private void Awake()
     {
-        talkAnimator = talk.GetComponent<Animator>();
+        rightAnimator = talk_Right.GetComponent<Animator>();
+        leftAnimator = talk_Left.GetComponent<Animator>();
+        dogGirlAnimator = dogGirl.GetComponent<Animator>();
+        dogGuyAnimator = dogGuy.GetComponent<Animator>();
         Timer.Singleton.AddDelayTask(3f, () =>
         {
             ResetHints();
@@ -74,7 +86,6 @@ public class DateManager : MonoMikroSingleton<DateManager>
 
     public void LaberKeyCode()
     {
-
         hint_Up = incorrectHintList[0];
         hint_Left = incorrectHintList[1];
         hint_Down = incorrectHintList[2];
@@ -83,23 +94,45 @@ public class DateManager : MonoMikroSingleton<DateManager>
     
     public void CheckAnswer()
     {
+        leftPlayIndex = 0;
+
         if (Input.GetKeyDown(KeyCode.W))
         {
+            while (btnOrginPosLis[leftPlayIndex] != hint_Up.GetComponent<ButtonFadeIn>().linkedButton)
+            {
+                leftPlayIndex++;
+            }
+            leftAnimator.SetInteger("State", leftPlayIndex);
             if (correctHint == hint_Up) CorrectChoice();
             else WrongChoice();
         }
         else if (Input.GetKeyDown(KeyCode.A))
         {
+            while (btnOrginPosLis[leftPlayIndex] != hint_Left.GetComponent<ButtonFadeIn>().linkedButton)
+            {
+                leftPlayIndex++;
+            }
+            leftAnimator.SetInteger("State", leftPlayIndex);
             if (correctHint == hint_Left) CorrectChoice();
             else WrongChoice();
         }
         else if (Input.GetKeyDown(KeyCode.S))
         {
+            while (btnOrginPosLis[leftPlayIndex] != hint_Down.GetComponent<ButtonFadeIn>().linkedButton)
+            {
+                leftPlayIndex++;
+            }
+            leftAnimator.SetInteger("State", leftPlayIndex);
             if (correctHint == hint_Down) CorrectChoice();
             else WrongChoice();
         }
         else if (Input.GetKeyDown(KeyCode.D))
         {
+            while (btnOrginPosLis[leftPlayIndex] != hint_Right.GetComponent<ButtonFadeIn>().linkedButton)
+            {
+                leftPlayIndex++;
+            }
+            leftAnimator.SetInteger("State", leftPlayIndex);
             if (correctHint == hint_Right) CorrectChoice();
             else WrongChoice();
         }
@@ -107,23 +140,39 @@ public class DateManager : MonoMikroSingleton<DateManager>
  
     public void CorrectChoice()
     {
-        Debug.Log("Correct");
-        DateManager.Singleton.ResetHints(); //Reset Hints
-        if (!MolesManager.Singleton.spawningMoles) MolesManager.Singleton.ResetMoles(); //Reset Moles
-        MolesManager.Singleton.occupiedHoleList.Clear(); //remove occupied list
+        dogGuyAnimator.SetInteger("State", 0);
+        dogGirlAnimator.SetInteger("State", 0);
+        Timer.Singleton.AddDelayTask(3f, () =>
+        {
+            Debug.Log("Correct");
+            DateManager.Singleton.ResetHints(); //Reset Hints
+            if (!MolesManager.Singleton.spawningMoles) MolesManager.Singleton.ResetMoles(); //Reset Moles
+            MolesManager.Singleton.occupiedHoleList.Clear(); //remove occupied list
+            leftAnimator.SetInteger("State", -1);
+        });
+        
     } 
 
     public void WrongChoice()
     {
-        Debug.Log("You Loser");
-        DateManager.Singleton.ResetHints();
-        if (!MolesManager.Singleton.spawningMoles) MolesManager.Singleton.ResetMoles();
-        MolesManager.Singleton.occupiedHoleList.Clear(); //remove occupied list
+        dogGuyAnimator.SetInteger("State", 1);
+        dogGirlAnimator.SetInteger("State", 1);
+        Timer.Singleton.AddDelayTask(3f, () =>
+        {
+            Debug.Log("You Loser");
+            
+
+            DateManager.Singleton.ResetHints();
+            if (!MolesManager.Singleton.spawningMoles) MolesManager.Singleton.ResetMoles();
+            MolesManager.Singleton.occupiedHoleList.Clear(); //remove occupied list
+            leftAnimator.SetInteger("State", -1);
+        });
     }
 
     public void ResetHints()
     {
-
+        dogGuyAnimator.SetInteger("State", 0);
+        dogGirlAnimator.SetInteger("State", 0);
         ClearPrevHints();
         SpawnNewHints();
 
@@ -157,6 +206,10 @@ public class DateManager : MonoMikroSingleton<DateManager>
 
     public void SpawnNewHints()
     {
+        foreach(GameObject element in btnOrginPosLis)
+        {
+            element.GetComponent<SpriteRenderer>().DOFade(1, 1f);
+        }
 
         for (int i = 0; i < hintSpawnPosList.Count; i++)
         {
@@ -222,7 +275,7 @@ public class DateManager : MonoMikroSingleton<DateManager>
             matchIndex++;
         }
 
-        talkAnimator.SetInteger("State", matchIndex);
+        rightAnimator.SetInteger("State", matchIndex);
 
         
     }
