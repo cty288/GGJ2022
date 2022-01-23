@@ -2,6 +2,7 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using MikroFramework.Event;
+using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -27,7 +28,7 @@ public class PeeTreeSlider : MonoBehaviour {
 
     private void Update() {
         if (sliderMove) {
-            if (Input.GetKey(KeyCode.Space)) {
+            if (Input.GetMouseButton(0)) {
                 peeTreeSlider.value += (sliderMoveForward ? 1 : -1) * sliderSpeed * Time.deltaTime;
                 if (sliderMoveForward && peeTreeSlider.value >= 1)
                 {
@@ -41,17 +42,20 @@ public class PeeTreeSlider : MonoBehaviour {
 
             }
 
-            if (Input.GetKeyUp(KeyCode.Space)) {
+            if (Input.GetMouseButtonUp(0)) {
                
                 if (peeTreeSlider.value >= peeTreeChargePercentage &&
                     peeTreeSlider.value <= peeTreeChargePercentage + sliderWidth) {
-                    TypeEventSystem.SendGlobalEvent<OnTreePassed>();
+                    TypeEventSystem.SendGlobalEvent<OnTreePassed>(new OnTreePassed() {
+                        IsLastTree = (Level12Manager.Singleton.CurrentTree == Level12Manager.Singleton.MaxTreeCount),
+                        PeeTree = Level12Manager.Singleton.CurrentPeeTree
+                    });
                     //sliderMove = false;
                 }
                 else {
                     peeTreeSlider.value = 0;
                     sliderMoveForward = true;
-                    TypeEventSystem.SendGlobalEvent<OnPlayerFail>();
+                    //TypeEventSystem.SendGlobalEvent<OnPlayerFail>();
                     Debug.Log("Fail");
                 }
             }

@@ -10,6 +10,7 @@ using Random = UnityEngine.Random;
 public class PeeTree {
     public GameObject TreePrefab;
     public float PeeChargePosition;
+    public GameObject treeShootAnimationPrefab;
 }
 
 public struct OnTreeSpawned {
@@ -18,36 +19,61 @@ public struct OnTreeSpawned {
 }
 
 public struct OnTreePassed {
-    
+    public bool IsLastTree;
+    public PeeTree PeeTree;
 }
 
 public class Level12Manager : MonoMikroSingleton<Level12Manager> {
-    [SerializeField] private List<PeeTree> PeeTreeConfig;
+    [SerializeField] public List<PeeTree> PeeTreeConfig;
+  
     [SerializeField] private float treeSpawnY;
     [SerializeField] private float treeInitialSpawnX;
     [SerializeField] private float treeGap;
-    [SerializeField] private float maxTreeCount;
+    [SerializeField] private int maxTreeCount;
+    public int MaxTreeCount => maxTreeCount;
 
+    [SerializeField]
     private int currentTree = 0;
+    public int CurrentTree => currentTree;
+
+    public PeeTree CurrentPeeTree;
 
     private void Start() {
         TypeEventSystem.RegisterGlobalEvent<OnTreePassed>(OnTreeSwitched).UnRegisterWhenGameObjectDestroyed(gameObject);
-        SwitchTree();
+        SwitchTree(Random.Range(0, PeeTreeConfig.Count-1));
     }
 
     private void OnTreeSwitched(OnTreePassed e) {
-        if (currentTree < maxTreeCount) {
-            SwitchTree();
-        }
+        Timer.Singleton.AddDelayTask(2f, () => {
+            Debug.Log("Switch tree");
+            if (currentTree < maxTreeCount)
+            {
+                if (currentTree == maxTreeCount - 1)
+                {
+                    SwitchTree(PeeTreeConfig.Count - 1);
+                }
+                else
+                {
+                    int switchIndex = Random.Range(0, PeeTreeConfig.Count - 1);
+                    SwitchTree(switchIndex);
+
+                }
+
+            }
+        });
+        
         
     }
 
-    private void SwitchTree() {
+    private void SwitchTree(int treeIndex) {
         Vector2 spawnPosition = new Vector2(treeInitialSpawnX + currentTree * treeGap, treeSpawnY);
-
-        PeeTree peeTree = PeeTreeConfig[Random.Range(0, PeeTreeConfig.Count)];
+        PeeTree peeTree = PeeTreeConfig[treeIndex];
         GameObject treeSpawned = Instantiate(peeTree.TreePrefab, spawnPosition, Quaternion.identity);
+         if (treeSpawned.TryGetComponent<VerySmallFirePeed>(out VerySmallFirePeed tree)) {
+             tree.TreeNum = currentTree;
+         }
         TypeEventSystem.SendGlobalEvent<OnTreeSpawned>(new OnTreeSpawned() {PeeTree = peeTree, SpawnPosition = spawnPosition});
         currentTree++;
+        CurrentPeeTree = peeTree;
     }
 }
