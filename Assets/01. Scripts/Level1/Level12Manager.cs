@@ -40,13 +40,16 @@ public class Level12Manager : MonoMikroSingleton<Level12Manager> {
 
     public PeeTree CurrentPeeTree;
 
+    [SerializeField] private AudioClip grandBGM;
     private void Start() {
         TypeEventSystem.RegisterGlobalEvent<OnTreePassed>(OnTreeSwitched).UnRegisterWhenGameObjectDestroyed(gameObject);
         SwitchTree(Random.Range(0, PeeTreeConfig.Count-1));
+
         Timer.Singleton.AddDelayTask(5, () => {
             TypeEventSystem.SendGlobalEvent<OnLeftPrepareToStart>();
             Timer.Singleton.AddDelayTask(4, () => {
                 TypeEventSystem.SendGlobalEvent<OnLeftStart>();
+                AudioManager.Singleton.PlayBGM(AudioType.Soleum, grandBGM, 1.5f);
             });
         });
     }

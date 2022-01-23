@@ -18,9 +18,10 @@ public class GlobalManager : MonoPersistentMikroSingleton<GlobalManager> {
     public BindableProperty<int> CurrentLevelNum = new BindableProperty<int>(0);
     public BindableProperty<int> Health = new BindableProperty<int>(3);
 
+   
     private void Start() {
         TypeEventSystem.RegisterGlobalEvent<OnPlayerFail>(OnPlayerFail).UnRegisterWhenGameObjectDestroyed(gameObject);
-
+        
     }
 
     private void OnPlayerFail(OnPlayerFail obj) {

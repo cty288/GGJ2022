@@ -13,9 +13,8 @@ public class AudioLevel3Manager : MonoBehaviour
 
     public AudioClip[] audioClips;
 
-    private void Start()
-    {
-        TypeEventSystem.RegisterGlobalEvent<PlayAudio>(PlayAudio);
+    private void Start() {
+        TypeEventSystem.RegisterGlobalEvent<PlayAudio>(PlayAudio).UnRegisterWhenGameObjectDestroyed(gameObject);
     }
     //private audiomanager() { }
 

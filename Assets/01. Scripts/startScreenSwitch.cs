@@ -16,7 +16,13 @@ public class startScreenSwitch : MonoBehaviour
     {
         if (Input.GetKeyDown(KeyCode.Space))
         {
-            SceneManager.LoadScene("1");
+            if (SceneManager.GetActiveScene().buildIndex == 0) {
+                SceneManager.LoadScene(1);
+            }
+            else {
+                SceneManager.LoadScene(0);
+            }
+
         }
     }
 }

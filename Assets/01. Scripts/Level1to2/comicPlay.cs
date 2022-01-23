@@ -71,7 +71,12 @@ public class comicPlay : MonoBehaviour
     {
         yield return new WaitForSeconds(1f);
         text.enabled = false;
-        black.DOFade(1, 1);
+        black.DOFade(1, 1).OnComplete(() => {
+            Timer.Singleton.AddDelayTask(1f, () => {
+                SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex + 1);
+            });
+        });
+        
     }
 
     // Update is called once per frame

@@ -20,17 +20,21 @@ public class AudioManager : MonoPersistentMikroSingleton<AudioManager> {
 
     [SerializeField] private float happyVolume, soleumVolume;
 
+    private void Start() {
+        DontDestroyOnLoad(gameObject);
+    }
+
     private void Update() {
         if (Input.GetKeyDown(KeyCode.Space)) {
-            PlayBGM(AudioType.Happy, 1);
+            //PlayBGM(AudioType.Happy, 1);
         }
 
         if (Input.GetKeyDown(KeyCode.LeftShift)) {
-            PlayBGM(AudioType.Soleum, 1);
+            //PlayBGM(AudioType.Soleum, 1);
         }
     }
 
-    public void PlayBGM(AudioType audioType, float flipTime) {
+    public void PlayBGM(AudioType audioType, AudioClip audioClip, float flipTime) {
         AudioSource sourceTurnOn = null, sourceTurnOff = null;
         float targetVolume = 0;
         switch (audioType) {
@@ -38,11 +42,15 @@ public class AudioManager : MonoPersistentMikroSingleton<AudioManager> {
                 sourceTurnOff = soleumAudioSource;
                 sourceTurnOn = happyBGMSource;
                 targetVolume = happyVolume;
+                happyBGMSource.clip = audioClip;
+                happyBGMSource.Play();
                 break;
             case AudioType.Soleum:
                 sourceTurnOff = happyBGMSource;
                 sourceTurnOn = soleumAudioSource;
                 targetVolume = soleumVolume;
+                soleumAudioSource.clip = audioClip;
+                soleumAudioSource.Play();
                 break;
         }
 
