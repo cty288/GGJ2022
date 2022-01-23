@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using MikroFramework.Singletons;
 using UnityEngine.UI;
+using DG.Tweening;
 
 public class DateManager : MonoMikroSingleton<DateManager>
 {
@@ -10,6 +11,8 @@ public class DateManager : MonoMikroSingleton<DateManager>
     public GameObject hint_APref;
     public GameObject hint_SPref;
     public GameObject hint_DPref;
+
+    public GameObject linkedBtn;
 
     [SerializeField] private List<GameObject> hintSpawnPosList;
     [SerializeField] private List<GameObject> incorrectHintList;
@@ -42,7 +45,13 @@ public class DateManager : MonoMikroSingleton<DateManager>
     {
         GameObject target = incorrectHintList[Random.Range(0, incorrectHintList.Count)];
         incorrectHintList.Remove(target);
-        Destroy(target);
+        SpriteRenderer render = target.GetComponent<SpriteRenderer>();
+        render.DOFade(0, 0.9f).OnComplete(() => Destroy(target));
+
+        ButtonFadeIn script = target.GetComponent<ButtonFadeIn>();
+        linkedBtn = script.linkedButton;
+        render = linkedBtn.GetComponent<SpriteRenderer>();
+        render.DOFade(0, 0.9f);
     }
 
     public void LaberKeyCode()
@@ -130,6 +139,9 @@ public class DateManager : MonoMikroSingleton<DateManager>
                 GameObject hint = Instantiate(hint_WPref, hintSpawnPosList[i].transform.position, Quaternion.identity);
                 hint.name = "Hint_W";
                 incorrectHintList.Add(hint);
+
+                ButtonFadeIn script = hint.GetComponent<ButtonFadeIn>();
+                script.linkedButton = hintSpawnPosList[i];
             }
 
             else if (i == 1)
@@ -137,6 +149,9 @@ public class DateManager : MonoMikroSingleton<DateManager>
                 GameObject hint = Instantiate(hint_APref, hintSpawnPosList[i].transform.position, Quaternion.identity);
                 hint.name = "Hint_A";
                 incorrectHintList.Add(hint);
+
+                ButtonFadeIn script = hint.GetComponent<ButtonFadeIn>();
+                script.linkedButton = hintSpawnPosList[i];
             }
 
             else if (i == 2)
@@ -144,6 +159,9 @@ public class DateManager : MonoMikroSingleton<DateManager>
                 GameObject hint = Instantiate(hint_SPref, hintSpawnPosList[i].transform.position, Quaternion.identity);
                 hint.name = "Hint_S";
                 incorrectHintList.Add(hint);
+
+                ButtonFadeIn script = hint.GetComponent<ButtonFadeIn>();
+                script.linkedButton = hintSpawnPosList[i];
             }
 
             else if (i == 3)
@@ -151,6 +169,9 @@ public class DateManager : MonoMikroSingleton<DateManager>
                 GameObject hint = Instantiate(hint_DPref, hintSpawnPosList[i].transform.position, Quaternion.identity);
                 hint.name = "Hint_D";
                 incorrectHintList.Add(hint);
+
+                ButtonFadeIn script = hint.GetComponent<ButtonFadeIn>();
+                script.linkedButton = hintSpawnPosList[i];
             }
 
 

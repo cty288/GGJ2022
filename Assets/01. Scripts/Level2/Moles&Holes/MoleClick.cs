@@ -35,6 +35,4 @@ public class MoleClick : MonoBehaviour
         MolesManager.Singleton.occupiedHoleList.Remove(this.id);
         Animator.SetInteger("State", 0);
     }
-
-    
 }
