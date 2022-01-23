@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 using DG.Tweening;
+using MikroFramework.TimeSystem;
 using UnityEngine.SceneManagement;
 using TMPro;
 public class comicPlay : MonoBehaviour
@@ -71,7 +72,11 @@ public class comicPlay : MonoBehaviour
     {
         yield return new WaitForSeconds(1f);
         text.enabled = false;
-        black.DOFade(1, 1);
+        black.DOFade(1, 1).OnComplete(() => {
+            Timer.Singleton.AddDelayTask(1f, () => {
+                SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex + 1);
+            });
+        });
     }
 
     // Update is called once per frame
