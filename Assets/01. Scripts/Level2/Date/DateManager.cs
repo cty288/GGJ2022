@@ -2,19 +2,25 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using MikroFramework.Singletons;
+using UnityEngine.UI;
 
 public class DateManager : MonoMikroSingleton<DateManager>
 {
-    public GameObject hintPref;
+    public GameObject hint_WPref;
+    public GameObject hint_APref;
+    public GameObject hint_SPref;
+    public GameObject hint_DPref;
+
     [SerializeField] private List<GameObject> hintSpawnPosList;
     [SerializeField] private List<GameObject> incorrectHintList;
+    [SerializeField] private List<GameObject> btnList;
     [SerializeField] private GameObject correctHint;
-    [SerializeField] private SpriteRenderer spriteRenderer;
-
-    public GameObject hint_W;
-    public GameObject hint_A;
-    public GameObject hint_S;
-    public GameObject hint_D;
+     
+    
+    public GameObject hint_Up;
+    public GameObject hint_Left;
+    public GameObject hint_Down;
+    public GameObject hint_Right;
 
 
     #region Functional Field
@@ -42,32 +48,32 @@ public class DateManager : MonoMikroSingleton<DateManager>
     public void LaberKeyCode()
     {
 
-        hint_W = incorrectHintList[0];
-        hint_A = incorrectHintList[1];
-        hint_S = incorrectHintList[2];
-        hint_D = incorrectHintList[3];
+        hint_Up = incorrectHintList[0];
+        hint_Left = incorrectHintList[1];
+        hint_Down = incorrectHintList[2];
+        hint_Right = incorrectHintList[3];
     }
     
     public void CheckAnswer()
     {
         if (Input.GetKeyDown(KeyCode.W))
         {
-            if (correctHint == hint_W) CorrectChoice();
+            if (correctHint == hint_Up) CorrectChoice();
             else WrongChoice();
         }
         else if (Input.GetKeyDown(KeyCode.A))
         {
-            if (correctHint == hint_A) CorrectChoice();
+            if (correctHint == hint_Left) CorrectChoice();
             else WrongChoice();
         }
         else if (Input.GetKeyDown(KeyCode.S))
         {
-            if (correctHint == hint_S) CorrectChoice();
+            if (correctHint == hint_Down) CorrectChoice();
             else WrongChoice();
         }
         else if (Input.GetKeyDown(KeyCode.D))
         {
-            if (correctHint == hint_D) CorrectChoice();
+            if (correctHint == hint_Right) CorrectChoice();
             else WrongChoice();
         }
     }
@@ -77,7 +83,7 @@ public class DateManager : MonoMikroSingleton<DateManager>
         Debug.Log("Correct");
         DateManager.Singleton.ResetHints(); //Reset Hints
         if (!MolesManager.Singleton.spawningMoles) MolesManager.Singleton.ResetMoles(); //Reset Moles
-
+        MolesManager.Singleton.occupiedHoleList.Clear(); //remove occupied list
     } 
 
     public void WrongChoice()
@@ -85,6 +91,7 @@ public class DateManager : MonoMikroSingleton<DateManager>
         Debug.Log("You Loser");
         DateManager.Singleton.ResetHints();
         if (!MolesManager.Singleton.spawningMoles) MolesManager.Singleton.ResetMoles();
+        MolesManager.Singleton.occupiedHoleList.Clear(); //remove occupied list
     }
 
     public void ResetHints()
@@ -108,18 +115,50 @@ public class DateManager : MonoMikroSingleton<DateManager>
 
     public void SpawnNewHints()
     {
+        for (int i = 0; i < hintSpawnPosList.Count; i++)
+        {
+            GameObject temp = hintSpawnPosList[i];
+            int randomIndex = Random.Range(i, hintSpawnPosList.Count);
+            hintSpawnPosList[i] = hintSpawnPosList[randomIndex];
+            hintSpawnPosList[randomIndex] = temp;
+        }
+
         for (int i = 0; i < 4; i++)
         {
-            GameObject hint = Instantiate(hintPref, hintSpawnPosList[i].transform.position, Quaternion.identity);
-            hint.name = "Hint " + i;
-            incorrectHintList.Add(hint);
+            if (i == 0)
+            {
+                GameObject hint = Instantiate(hint_WPref, hintSpawnPosList[i].transform.position, Quaternion.identity);
+                hint.name = "Hint_W";
+                incorrectHintList.Add(hint);
+            }
+
+            else if (i == 1)
+            {
+                GameObject hint = Instantiate(hint_APref, hintSpawnPosList[i].transform.position, Quaternion.identity);
+                hint.name = "Hint_A";
+                incorrectHintList.Add(hint);
+            }
+
+            else if (i == 2)
+            {
+                GameObject hint = Instantiate(hint_SPref, hintSpawnPosList[i].transform.position, Quaternion.identity);
+                hint.name = "Hint_S";
+                incorrectHintList.Add(hint);
+            }
+
+            else if (i == 3)
+            {
+                GameObject hint = Instantiate(hint_DPref, hintSpawnPosList[i].transform.position, Quaternion.identity);
+                hint.name = "Hint_D";
+                incorrectHintList.Add(hint);
+            }
+
+
         }
         LaberKeyCode();
         correctHint = incorrectHintList[Random.Range(0, 4)];
         correctHint.name = "CorrectHint";
         incorrectHintList.Remove(correctHint);
-        spriteRenderer = correctHint.GetComponent<SpriteRenderer>();
-        spriteRenderer.color = Color.yellow;
     }
 
     #endregion

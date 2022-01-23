@@ -10,6 +10,9 @@ GameObject:
   m_Component:
   - component: {fileID: 6088517580001503608}
   - component: {fileID: 193964395764529486}
+  - component: {fileID: -6458513382456487522}
+  - component: {fileID: -9091431947523438270}
+  - component: {fileID: 5405738481972662732}
   m_Layer: 0
   m_Name: Duck
   m_TagString: Untagged
@@ -84,3 +87,42 @@ SpriteRenderer:
   m_WasSpriteAssigned: 1
   m_MaskInteraction: 0
   m_SpriteSortPoint: 0
+--- !u!114 &-6458513382456487522
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2148897629906006286}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 2d2ea64fd056bf14ca26395b5fa3a0b4, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  id: -1
+  animator: {fileID: 0}
+--- !u!114 &-9091431947523438270
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2148897629906006286}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 512cc20db38738d49a9fbd9bd318665f, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  disappearTime: 5
+--- !u!114 &5405738481972662732
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2148897629906006286}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: b8d429ac8fac52243b1d49845fcbee70, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
