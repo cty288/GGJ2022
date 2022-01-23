@@ -118,6 +118,7 @@ MonoBehaviour:
   id: -1
   dogHead: {fileID: 0}
   Animator: {fileID: 0}
+  clickDuck: {fileID: 8300000, guid: 32200a69caac2344c9234aa82417a3d0, type: 3}
 --- !u!60 &-8011014810289889197
 PolygonCollider2D:
   m_ObjectHideFlags: 0

@@ -41,6 +41,15 @@ public class DateManager : MonoMikroSingleton<DateManager>
     public int matchIndex = -2;
     public int leftPlayIndex;
 
+    public bool isShaking = false;
+
+    public AudioClip correctChoice1;
+    public AudioClip correctChoice2;
+    public AudioClip correctChoice3;
+    public AudioClip wrongChoice;
+
+    public int streak = 0;
+
 
     #region Functional Field
     private void Awake()
@@ -137,9 +146,23 @@ public class DateManager : MonoMikroSingleton<DateManager>
             else WrongChoice();
         }
     }
+
  
     public void CorrectChoice()
     {
+        streak++;
+        if (streak == 0)
+        {
+            AudioManager.Singleton.PlayAudioShot(correctChoice1, 1);
+        }
+        else if (streak == 1)
+        {
+            AudioManager.Singleton.PlayAudioShot(correctChoice2, 1);
+        }
+        else 
+        {
+            AudioManager.Singleton.PlayAudioShot(correctChoice3, 1);
+        }
         dogGuyAnimator.SetInteger("State", 0);
         dogGirlAnimator.SetInteger("State", 0);
         Timer.Singleton.AddDelayTask(3f, () =>
@@ -155,6 +178,10 @@ public class DateManager : MonoMikroSingleton<DateManager>
 
     public void WrongChoice()
     {
+        AudioManager.Singleton.PlayAudioShot(wrongChoice, 1);
+        streak = 0;
+        ShakeCamera.Shake(true, 3, 10);
+
         dogGuyAnimator.SetInteger("State", 1);
         dogGirlAnimator.SetInteger("State", 1);
         Timer.Singleton.AddDelayTask(3f, () =>

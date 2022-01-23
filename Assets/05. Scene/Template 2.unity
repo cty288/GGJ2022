@@ -838,7 +838,7 @@ Camera:
   far clip plane: 1000
   field of view: 60
   orthographic: 1
-  orthographic size: 11.325842
+  orthographic size: 10.723404
   m_Depth: -1
   m_CullingMask:
     serializedVersion: 2
@@ -1327,7 +1327,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 0
+  m_IsActive: 1
 --- !u!114 &1013735659
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1342,7 +1342,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   happyBGMSource: {fileID: 1894505051}
   soleumAudioSource: {fileID: 1346468697}
-  generalAudioSource: {fileID: 0}
+  generalAudioSource: {fileID: 245445630}
   happyVolume: 0.5
   soleumVolume: 0.5
 --- !u!4 &1013735660
@@ -1476,6 +1476,7 @@ MonoBehaviour:
   molePref: {fileID: 7688656154961560019, guid: 3734d949f15cd9e4091c9d0d27c26232, type: 3}
   duckPref: {fileID: 4650586109383411942, guid: f35b79364d18028488abaef12beea716, type: 3}
   readyToSpawnDucks: 0
+  audioIndex: 0
 --- !u!4 &1131825377
 Transform:
   m_ObjectHideFlags: 0
@@ -1549,6 +1550,12 @@ MonoBehaviour:
   correctHintIndex: 0
   matchIndex: -2
   leftPlayIndex: 0
+  isShaking: 0
+  correctChoice1: {fileID: 8300000, guid: ef5de51956ca87f448a5c25500c35001, type: 3}
+  correctChoice2: {fileID: 8300000, guid: 799f8dbdc73d23748834dc4cd60df0a6, type: 3}
+  correctChoice3: {fileID: 8300000, guid: 788105594e6f1584a974b17916184cd3, type: 3}
+  wrongChoice: {fileID: 8300000, guid: 32200a69caac2344c9234aa82417a3d0, type: 3}
+  streak: 0
 --- !u!4 &1202857171
 Transform:
   m_ObjectHideFlags: 0
@@ -3319,9 +3326,9 @@ AudioSource:
   m_Enabled: 1
   serializedVersion: 4
   OutputAudioMixerGroup: {fileID: 0}
-  m_audioClip: {fileID: 8300000, guid: bbb3baed6bf6e464da6a4d2df7e59ce3, type: 3}
+  m_audioClip: {fileID: 8300000, guid: b00ac55f58f93504a83c835d20df2eb9, type: 3}
   m_PlayOnAwake: 1
-  m_Volume: 0.5
+  m_Volume: 0.174
   m_Pitch: 1
   Loop: 1
   Mute: 0
@@ -3805,7 +3812,7 @@ Camera:
   far clip plane: 1000
   field of view: 60
   orthographic: 1
-  orthographic size: 11.325842
+  orthographic size: 10.723404
   m_Depth: -1
   m_CullingMask:
     serializedVersion: 2

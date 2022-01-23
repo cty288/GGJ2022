@@ -104,6 +104,10 @@ MonoBehaviour:
   id: 2
   dogHead: {fileID: 0}
   Animator: {fileID: 0}
+  moleClick1: {fileID: 8300000, guid: c3cbab1c0ed0a4c4eb57c5966e95717f, type: 3}
+  moleClick2: {fileID: 8300000, guid: f57039581fa4d8f4aa797769665c23f0, type: 3}
+  moleClick3: {fileID: 8300000, guid: ff41250e8caf45845bb4f4be3688ebf6, type: 3}
+  audioIndex: 0
 --- !u!60 &7677150784152646610
 PolygonCollider2D:
   m_ObjectHideFlags: 0
@@ -232,3 +236,4 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: d8e62c06d2bac5a498465d6404b43b64, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  linkedButton: {fileID: 0}

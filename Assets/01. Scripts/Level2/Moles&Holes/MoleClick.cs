@@ -12,6 +12,10 @@ public class MoleClick : MonoBehaviour
     public int id = -1;
     [SerializeField] private GameObject dogHead;
     [SerializeField] private Animator Animator;
+    [SerializeField] private AudioClip moleClick1;
+    [SerializeField] private AudioClip moleClick2;
+    [SerializeField] private AudioClip moleClick3;
+    
 
     private void Awake()
     {
@@ -25,6 +29,23 @@ public class MoleClick : MonoBehaviour
     }
 
     private void OnMouseDown(){
+
+        if(MolesManager.Singleton.audioIndex == 0)
+        {
+            AudioManager.Singleton.PlayAudioShot(moleClick1, 1);
+            MolesManager.Singleton.audioIndex++;
+        }
+        else if (MolesManager.Singleton.audioIndex == 1)
+        {
+            AudioManager.Singleton.PlayAudioShot(moleClick2, 1);
+            MolesManager.Singleton.audioIndex++;
+        }
+        else if (MolesManager.Singleton.audioIndex == 2)
+        {
+            AudioManager.Singleton.PlayAudioShot(moleClick3, 1);
+            MolesManager.Singleton.audioIndex = 0;
+        }
+
         Debug.Log(dogHead);
         MolesManager.count++;
         SpriteRenderer render = gameObject.GetComponent<SpriteRenderer>();

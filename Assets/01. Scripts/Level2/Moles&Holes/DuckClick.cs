@@ -8,6 +8,7 @@ public class DuckClick : MonoBehaviour
     public int id = -1;
     [SerializeField] private GameObject dogHead;
     [SerializeField] private Animator Animator;
+    [SerializeField] private AudioClip clickDuck;
 
     private void Awake()
     {
@@ -16,7 +17,14 @@ public class DuckClick : MonoBehaviour
     }
     private void OnMouseDown()
     {
-        
+        AudioManager.Singleton.PlayAudioShot(clickDuck, 1);
+        if (!DateManager.Singleton.isShaking)
+        {
+            DateManager.Singleton.isShaking = true;
+            ShakeCamera.Shake(false, 2, 20);
+            DateManager.Singleton.isShaking = false;
+        }
+
         MolesManager.count++;
         SpriteRenderer render = gameObject.GetComponent<SpriteRenderer>();
 

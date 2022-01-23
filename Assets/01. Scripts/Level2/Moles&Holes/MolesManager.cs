@@ -18,7 +18,9 @@ public class MolesManager : MonoMikroSingleton<MolesManager>
     [SerializeField] private GameObject molePref;
     [SerializeField] private GameObject duckPref;
     [SerializeField] private bool readyToSpawnDucks = false;
-    
+
+    public int audioIndex;
+
     #region Functional Field
 
     private void Awake()
