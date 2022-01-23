@@ -15,7 +15,12 @@ public class MoleClick : MonoBehaviour
     [SerializeField] private AudioClip moleClick1;
     [SerializeField] private AudioClip moleClick2;
     [SerializeField] private AudioClip moleClick3;
-    
+
+    public Texture2D clicked;
+    public Texture2D normal;
+    public CursorMode cursorMode = CursorMode.Auto;
+    public Vector2 hotSpot = Vector2.zero;
+
 
     private void Awake()
     {
@@ -30,7 +35,9 @@ public class MoleClick : MonoBehaviour
 
     private void OnMouseDown(){
 
-        if(MolesManager.Singleton.audioIndex == 0)
+        Cursor.SetCursor(clicked, hotSpot, cursorMode);
+
+        if (MolesManager.Singleton.audioIndex == 0)
         {
             AudioManager.Singleton.PlayAudioShot(moleClick1, 1);
             MolesManager.Singleton.audioIndex++;
@@ -55,5 +62,10 @@ public class MoleClick : MonoBehaviour
         DateManager.Singleton.DestroyHint();
         MolesManager.Singleton.occupiedHoleList.Remove(this.id);
         Animator.SetInteger("State", 0);
+    }
+
+    public void OnMouseUp()
+    {
+        Cursor.SetCursor(normal, hotSpot, cursorMode);
     }
 }

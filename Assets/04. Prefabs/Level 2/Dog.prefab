@@ -107,7 +107,10 @@ MonoBehaviour:
   moleClick1: {fileID: 8300000, guid: c3cbab1c0ed0a4c4eb57c5966e95717f, type: 3}
   moleClick2: {fileID: 8300000, guid: f57039581fa4d8f4aa797769665c23f0, type: 3}
   moleClick3: {fileID: 8300000, guid: ff41250e8caf45845bb4f4be3688ebf6, type: 3}
-  audioIndex: 0
+  clicked: {fileID: 2800000, guid: c0d1199180fe5b64688d495cf076e62a, type: 3}
+  normal: {fileID: 2800000, guid: d32bcb8beeb9c2f40bb66f9b572686e0, type: 3}
+  cursorMode: 0
+  hotSpot: {x: 0, y: 0}
 --- !u!60 &7677150784152646610
 PolygonCollider2D:
   m_ObjectHideFlags: 0

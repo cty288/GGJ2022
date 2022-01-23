@@ -19,6 +19,10 @@ public class MolesManager : MonoMikroSingleton<MolesManager>
     [SerializeField] private GameObject duckPref;
     [SerializeField] private bool readyToSpawnDucks = false;
 
+    public Texture2D normal;
+    private CursorMode cursorMode = CursorMode.Auto;
+    private Vector2 hotSpot = Vector2.zero;
+
     public int audioIndex;
 
     #region Functional Field
@@ -30,6 +34,7 @@ public class MolesManager : MonoMikroSingleton<MolesManager>
 
     private void Start()
     {
+        Cursor.SetCursor(normal, hotSpot, cursorMode);
         ResetMoles();
         Timer.Singleton.AddDelayTask(5, () => {
             readyToSpawnDucks = true;
@@ -44,7 +49,7 @@ public class MolesManager : MonoMikroSingleton<MolesManager>
     #endregion
 
     #region Moles
-    
+
     public void ResetMoles()
     {
         StartCoroutine(CoroutineResetMoles());
