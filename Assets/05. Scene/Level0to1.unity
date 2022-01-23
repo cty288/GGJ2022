@@ -181,7 +181,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_Sprite: {fileID: 21300000, guid: 7d2e20c1229707440b7e02023c80c638, type: 3}
+  m_Sprite: {fileID: 21300000, guid: 4d8b62e7df7499d458f7681c1d5f8c4a, type: 3}
   m_Type: 3
   m_PreserveAspect: 0
   m_FillCenter: 1
@@ -399,7 +399,7 @@ MonoBehaviour:
   object2: {fileID: 813220770}
   object3: {fileID: 1892143478}
   blackObject: {fileID: 149717260}
-  hint: {fileID: 1780290100}
+  hint: {fileID: 0}
   image1: {fileID: 20932025}
   image2: {fileID: 813220772}
   image3: {fileID: 1892143480}
@@ -551,7 +551,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_Sprite: {fileID: 21300000, guid: e77c235fa8bd1dd4a81ba20fd65209c8, type: 3}
+  m_Sprite: {fileID: 21300000, guid: d0da4989e6573c048bbc935f167db5b5, type: 3}
   m_Type: 3
   m_PreserveAspect: 0
   m_FillCenter: 1
@@ -1272,7 +1272,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_Sprite: {fileID: 21300000, guid: b322eb01f20327b4fbe476cad46d7a13, type: 3}
+  m_Sprite: {fileID: 21300000, guid: 1bd2399e42c36a14c8fcd81d7f0e1fef, type: 3}
   m_Type: 3
   m_PreserveAspect: 0
   m_FillCenter: 1
