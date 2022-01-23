@@ -4,6 +4,8 @@ using UnityEngine;
 using MikroFramework.Singletons;
 using UnityEngine.UI;
 using DG.Tweening;
+using UnityEngine.Events;
+using MikroFramework.Event;
 
 public class DateManager : MonoMikroSingleton<DateManager>
 {
@@ -178,6 +180,8 @@ public class DateManager : MonoMikroSingleton<DateManager>
 
     public void WrongChoice()
     {
+        TypeEventSystem.SendGlobalEvent<OnPlayerFail>();
+
         AudioManager.Singleton.PlayAudioShot(wrongChoice, 1);
         streak = 0;
         ShakeCamera.Shake(true, 3, 10);
