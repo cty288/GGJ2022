@@ -1,3 +1,4 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -6,6 +7,8 @@ using UnityEngine.UI;
 using DG.Tweening;
 using UnityEngine.Events;
 using MikroFramework.Event;
+using UnityEngine.SceneManagement;
+using Random = UnityEngine.Random;
 
 public class DateManager : MonoMikroSingleton<DateManager>
 {
@@ -52,7 +55,7 @@ public class DateManager : MonoMikroSingleton<DateManager>
 
     public int streak = 0;
 
-
+    
     #region Functional Field
     private void Awake()
     {
@@ -62,14 +65,24 @@ public class DateManager : MonoMikroSingleton<DateManager>
         dogGuyAnimator = dogGuy.GetComponent<Animator>();
         Timer.Singleton.AddDelayTask(3f, () =>
         {
-            ResetHints();
+            
+                ResetHints();
+            
+           
         });
     }
 
     private void Update()
     {
-        CheckAnswer();
+        if (Input.GetKeyDown(KeyCode.V)) {
+            SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex + 1);
+        }
+            CheckAnswer();
+        
+       
     }
+
+  
 
     #region Talk
 
@@ -84,15 +97,20 @@ public class DateManager : MonoMikroSingleton<DateManager>
 
     public void DestroyHint()
     {
-        GameObject target = incorrectHintList[Random.Range(0, incorrectHintList.Count)];
-        incorrectHintList.Remove(target);
-        SpriteRenderer render = target.GetComponent<SpriteRenderer>();
-        render.DOFade(0, 0.9f).OnComplete(() => Destroy(target));
+       
+            GameObject target = incorrectHintList[Random.Range(0,incorrectHintList.Count)];
+            incorrectHintList.Remove(target);
+            SpriteRenderer render = target.GetComponent<SpriteRenderer>();
+            render.DOFade(0, 0.9f).OnComplete(() => {
+                Destroy(target);
+            });
 
-        ButtonFadeIn script = target.GetComponent<ButtonFadeIn>();
-        linkedBtn = script.linkedButton;
-        render = linkedBtn.GetComponent<SpriteRenderer>();
-        render.DOFade(0, 0.9f);
+            ButtonFadeIn script = target.GetComponent<ButtonFadeIn>();
+            linkedBtn = script.linkedButton;
+            render = linkedBtn.GetComponent<SpriteRenderer>();
+            render.DOFade(0, 0.9f);
+        
+      
     }
 
     public void LaberKeyCode()
@@ -105,10 +123,11 @@ public class DateManager : MonoMikroSingleton<DateManager>
     
     public void CheckAnswer()
     {
+
         leftPlayIndex = 0;
 
-        if (Input.GetKeyDown(KeyCode.W))
-        {
+        if (Input.GetKeyDown(KeyCode.W)) {
+          
             while (btnOrginPosLis[leftPlayIndex] != hint_Up.GetComponent<ButtonFadeIn>().linkedButton)
             {
                 leftPlayIndex++;
@@ -116,9 +135,11 @@ public class DateManager : MonoMikroSingleton<DateManager>
             leftAnimator.SetInteger("State", leftPlayIndex);
             if (correctHint == hint_Up) CorrectChoice();
             else WrongChoice();
+            
         }
         else if (Input.GetKeyDown(KeyCode.A))
         {
+           
             while (btnOrginPosLis[leftPlayIndex] != hint_Left.GetComponent<ButtonFadeIn>().linkedButton)
             {
                 leftPlayIndex++;
@@ -126,9 +147,11 @@ public class DateManager : MonoMikroSingleton<DateManager>
             leftAnimator.SetInteger("State", leftPlayIndex);
             if (correctHint == hint_Left) CorrectChoice();
             else WrongChoice();
+            
         }
         else if (Input.GetKeyDown(KeyCode.S))
         {
+           
             while (btnOrginPosLis[leftPlayIndex] != hint_Down.GetComponent<ButtonFadeIn>().linkedButton)
             {
                 leftPlayIndex++;
@@ -136,9 +159,11 @@ public class DateManager : MonoMikroSingleton<DateManager>
             leftAnimator.SetInteger("State", leftPlayIndex);
             if (correctHint == hint_Down) CorrectChoice();
             else WrongChoice();
+           
         }
         else if (Input.GetKeyDown(KeyCode.D))
         {
+            
             while (btnOrginPosLis[leftPlayIndex] != hint_Right.GetComponent<ButtonFadeIn>().linkedButton)
             {
                 leftPlayIndex++;
@@ -146,13 +171,20 @@ public class DateManager : MonoMikroSingleton<DateManager>
             leftAnimator.SetInteger("State", leftPlayIndex);
             if (correctHint == hint_Right) CorrectChoice();
             else WrongChoice();
+            
         }
+
+       
     }
 
  
     public void CorrectChoice()
     {
         streak++;
+        if (guessCorrectCounter == -1) {
+            guessCorrectCounter = 0;
+        }
+        guessCorrectCounter++;
         if (streak == 0)
         {
             AudioManager.Singleton.PlayAudioShot(correctChoice1, 1);
@@ -165,6 +197,10 @@ public class DateManager : MonoMikroSingleton<DateManager>
         {
             AudioManager.Singleton.PlayAudioShot(correctChoice3, 1);
         }
+
+        if (guessCorrectCounter == 5) {
+            TypeEventSystem.SendGlobalEvent<OnLevelPass>(new OnLevelPass());
+        }
         dogGuyAnimator.SetInteger("State", 0);
         dogGirlAnimator.SetInteger("State", 0);
         Timer.Singleton.AddDelayTask(3f, () =>
@@ -176,8 +212,9 @@ public class DateManager : MonoMikroSingleton<DateManager>
             leftAnimator.SetInteger("State", -1);
         });
         
-    } 
+    }
 
+    private int guessCorrectCounter = -1;
     public void WrongChoice()
     {
         TypeEventSystem.SendGlobalEvent<OnPlayerFail>();
@@ -190,13 +227,20 @@ public class DateManager : MonoMikroSingleton<DateManager>
         dogGirlAnimator.SetInteger("State", 1);
         Timer.Singleton.AddDelayTask(3f, () =>
         {
-            Debug.Log("You Loser");
-            
+            if (guessCorrectCounter != -1) {
+                Debug.Log("You Loser");
 
-            DateManager.Singleton.ResetHints();
-            if (!MolesManager.Singleton.spawningMoles) MolesManager.Singleton.ResetMoles();
-            MolesManager.Singleton.occupiedHoleList.Clear(); //remove occupied list
-            leftAnimator.SetInteger("State", -1);
+
+                DateManager.Singleton.ResetHints();
+                if (!MolesManager.Singleton.spawningMoles) MolesManager.Singleton.ResetMoles();
+                MolesManager.Singleton.occupiedHoleList.Clear(); //remove occupied list
+                if (leftAnimator)
+                {
+                    leftAnimator.SetInteger("State", -1);
+                }
+            }
+           
+           
         });
     }
 
@@ -237,8 +281,7 @@ public class DateManager : MonoMikroSingleton<DateManager>
 
     public void SpawnNewHints()
     {
-        foreach(GameObject element in btnOrginPosLis)
-        {
+        foreach(GameObject element in btnOrginPosLis) {
             element.GetComponent<SpriteRenderer>().DOFade(1, 1f);
         }
 

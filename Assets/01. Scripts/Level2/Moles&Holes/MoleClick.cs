@@ -56,7 +56,7 @@ public class MoleClick : MonoBehaviour
         Debug.Log(dogHead);
         MolesManager.count++;
         SpriteRenderer render = gameObject.GetComponent<SpriteRenderer>();
-        render.DOFade(0, 1f);//OnComplete(() => Destroy(gameObject));
+        render.DOFade(0, 1f);//(() => Destroy(gameObject));
         
         Debug.Log("233");
         DateManager.Singleton.DestroyHint();

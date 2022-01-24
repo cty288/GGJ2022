@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using MikroFramework.Singletons;
 using MikroFramework.BindableProperty;
+using MikroFramework.Event;
 
 public class MolesManager : MonoMikroSingleton<MolesManager>
 {
@@ -32,13 +33,24 @@ public class MolesManager : MonoMikroSingleton<MolesManager>
         
     }
 
+    [SerializeField] private AudioClip grandBGM;
     private void Start()
     {
+        Timer.Singleton.AddDelayTask(5, () => {
+            TypeEventSystem.SendGlobalEvent<OnLeftPrepareToStart>();
+            Timer.Singleton.AddDelayTask(4, () => {
+                TypeEventSystem.SendGlobalEvent<OnLeftStart>();
+                AudioManager.Singleton.PlayBGM(AudioType.Soleum, grandBGM, 1.5f);
+            });
+        });
+
         Cursor.SetCursor(normal, hotSpot, cursorMode);
         ResetMoles();
         Timer.Singleton.AddDelayTask(5, () => {
             readyToSpawnDucks = true;
         });
+
+
     }
 
     private void Update()

@@ -690,6 +690,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 83e5ed61a805bad428fe450867abc59c, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  time: 1
 --- !u!1 &588964145
 GameObject:
   m_ObjectHideFlags: 0
@@ -1863,7 +1864,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: fe87c0e1cc204ed48ad3b37840f39efc, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  m_Material: {fileID: 0}
+  m_Material: {fileID: 2100000, guid: 929301af80f30d444ba435745fc737b9, type: 2}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_RaycastTarget: 1
   m_RaycastPadding: {x: 0, y: 0, z: 0, w: 0}
@@ -2548,7 +2549,7 @@ MonoBehaviour:
   treeSpawnY: -0.3
   treeInitialSpawnX: 100.43
   treeGap: 42
-  maxTreeCount: 5
+  maxTreeCount: 15
   currentTree: 0
   RemainingFightNum:
     value: 10
